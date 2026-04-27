@@ -21,3 +21,19 @@ hamburger.addEventListener("click", () =>
 );
 closeBtn.addEventListener("click", closeMenu);
 overlay.addEventListener("click", closeMenu);
+
+const revealObserver = new IntersectionObserver(
+  (entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("is-visible");
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  },
+  { threshold: 0.12 },
+);
+
+document
+  .querySelectorAll(".reveal-left, .reveal-up, .reveal-scale")
+  .forEach((el) => revealObserver.observe(el));
