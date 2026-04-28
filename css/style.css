@@ -702,7 +702,7 @@ nav {
   background: white;
   border: 1px solid #e2e2e2;
   border-radius: 16px;
-  padding: 28px;
+  padding: 24px 18px;
   box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
   position: relative;
   z-index: 5;
