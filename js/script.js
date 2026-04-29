@@ -104,3 +104,68 @@ if (pathSvg && pathSvg.getBoundingClientRect().top < window.innerHeight)
   );
 if (mobLayout && mobLayout.getBoundingClientRect().top < window.innerHeight)
   document.getElementById("mob-track")?.classList.add("drawn");
+
+// Work filter
+const workFilterBtns = document.querySelectorAll(".work-filter-btn");
+const workGrid = document.getElementById("work-grid");
+const workEmpty = document.getElementById("work-empty");
+
+// Set "All" active by default
+document
+  .querySelector('.work-filter-btn[data-filter="all"]')
+  .classList.add("active");
+
+workFilterBtns.forEach((btn) => {
+  btn.addEventListener("click", () => {
+    workFilterBtns.forEach((b) => b.classList.remove("active"));
+    btn.classList.add("active");
+    const filter = btn.dataset.filter;
+    const cards = workGrid.querySelectorAll(".work-card");
+    let visibleCount = 0;
+
+    cards.forEach((card) => {
+      const match = filter === "all" || card.dataset.category === filter;
+      if (match) {
+        card.classList.remove("work-hide");
+        card.style.display = "";
+        requestAnimationFrame(() => card.classList.add("work-show"));
+        setTimeout(() => card.classList.remove("work-show"), 500);
+        // featured card col-span only on "all"
+        if (
+          card.dataset.category === "fullstack" &&
+          card.classList.contains("sm:col-span-2")
+        ) {
+          card.classList.toggle("sm:col-span-2", filter === "all");
+        }
+        visibleCount++;
+      } else {
+        card.classList.add("work-hide");
+        setTimeout(() => {
+          card.style.display = "none";
+          card.classList.remove("work-hide");
+        }, 260);
+      }
+    });
+
+    workEmpty?.classList.toggle("hidden", visibleCount > 0);
+  });
+});
+
+// Skills bar fill on scroll
+const skillObserver = new IntersectionObserver(
+  (entries, obs) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.querySelectorAll(".skill-fill").forEach((bar) => {
+          bar.style.width = bar.dataset.width;
+        });
+        obs.unobserve(entry.target);
+      }
+    });
+  },
+  { threshold: 0.2 },
+);
+
+document
+  .querySelectorAll(".skills-card")
+  .forEach((card) => skillObserver.observe(card));
